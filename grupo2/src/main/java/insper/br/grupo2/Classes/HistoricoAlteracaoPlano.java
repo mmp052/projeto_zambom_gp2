@@ -2,8 +2,14 @@ package insper.br.grupo2.Classes;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
+
+import lombok.Getter;
+import lombok.Setter;
+
 import java.time.LocalDateTime;
 
+@Getter
+@Setter
 @Document(collection = "historico_alteracao_plano")
 public class HistoricoAlteracaoPlano {
     @Id
@@ -14,6 +20,7 @@ public class HistoricoAlteracaoPlano {
     private String planoAtual;
     private LocalDateTime dataAlteracao;
     private String tipoAlteracao; // Ex.: "UPGRADE", "DOWNGRADE", "CANCELAMENTO"
+    private String motivoCancelamento;
 
     public String getId() {
         return id;

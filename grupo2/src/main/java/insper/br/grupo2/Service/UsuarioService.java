@@ -20,6 +20,22 @@ public class UsuarioService {
     @Autowired
     private HistoricoAlteracaoPlanoRepository historicoRepository;
 
+    public Plano getPlanoUsuario(String usuarioId) {
+        Optional<Usuario> usuarioOpt = usuarioRepository.findById(usuarioId);
+        if (usuarioOpt.isPresent()) {
+            return usuarioOpt.get().getPlanoAtivo();
+        }
+        throw new RuntimeException("Usuário não encontrado");
+    }
+
+    public HistoricoAlteracaoPlano getHistoricoUsuario(String usuarioId) {
+        Optional<Usuario> usuarioOpt = usuarioRepository.findById(usuarioId);
+        if (usuarioOpt.isPresent()) {
+            return historicoRepository.findByUsuarioId(usuarioId);
+        }
+        throw new RuntimeException("Usuário não encontrado");
+    }
+
     public Usuario associarPlanoAUsuario(String usuarioId, Plano novoPlano) {
         Optional<Usuario> usuarioOpt = usuarioRepository.findById(usuarioId);
         if (usuarioOpt.isPresent()) {
@@ -57,6 +73,10 @@ public class UsuarioService {
             historico.setPlanoAtual("N/A");
             historico.setDataAlteracao(LocalDateTime.now());
             historico.setTipoAlteracao("CANCELAMENTO");
+            if(motivo == null) {
+                motivo = "Motivo não informado";
+            }
+            historico.setMotivoCancelamento(motivo);
 
             historicoRepository.save(historico);
         } else {
