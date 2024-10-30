@@ -21,28 +21,30 @@ public class UsuarioService {
     @Autowired
     private HistoricoAlteracaoPlanoRepository historicoRepository;
 
-    public Plano getPlanoUsuario(String usuarioId) {
-        Optional<Usuario> usuarioOpt = usuarioRepository.findById(usuarioId);
+    public Plano getPlanoUsuario(String email) {
+        Optional<Usuario> usuarioOpt = usuarioRepository.findByEmail(email);
         if (usuarioOpt.isPresent()) {
             return usuarioOpt.get().getPlanoAtivo();
         }
         throw new ResponseStatusException(org.springframework.http.HttpStatus.NOT_FOUND, "Usuário não encontrado");
     }
 
-    public HistoricoAlteracaoPlano getHistoricoUsuario(String usuarioId) {
-        Optional<Usuario> usuarioOpt = usuarioRepository.findById(usuarioId);
+    public HistoricoAlteracaoPlano getHistoricoUsuario(String email) {
+        Optional<Usuario> usuarioOpt = usuarioRepository.findByEmail(email);
         if (usuarioOpt.isPresent()) {
-            HistoricoAlteracaoPlano historico =  historicoRepository.findByUsuarioId(usuarioId);
+
+            HistoricoAlteracaoPlano historico =  historicoRepository.findByUsuarioEmail(email);
             if (historico != null) {
                 return historico;
             }
             throw new ResponseStatusException(org.springframework.http.HttpStatus.NOT_FOUND, "Histórico não encontrado");
+
         }
         throw new ResponseStatusException(org.springframework.http.HttpStatus.NOT_FOUND, "Usuário não encontrado");
     }
 
-    public Usuario associarPlanoAUsuario(String usuarioId, Plano novoPlano) {
-        Optional<Usuario> usuarioOpt = usuarioRepository.findById(usuarioId);
+    public Usuario associarPlanoAUsuario(String email, Plano novoPlano) {
+        Optional<Usuario> usuarioOpt = usuarioRepository.findByEmail(email);
         if (usuarioOpt.isPresent()) {
             Usuario usuario = usuarioOpt.get();
             Plano planoAnterior = usuario.getPlanoAtivo();
@@ -50,7 +52,7 @@ public class UsuarioService {
             usuario.setPlanoAtivoStatus(true);
             usuarioRepository.save(usuario);
             HistoricoAlteracaoPlano historico = new HistoricoAlteracaoPlano();
-            historico.setUsuarioId(usuarioId);
+            historico.setUsuarioId(usuario.getId());
             historico.setPlanoAnterior(planoAnterior != null ? planoAnterior.getNome() : "N/A");
             historico.setPlanoAtual(novoPlano.getNome());
             historico.setDataAlteracao(LocalDateTime.now());
@@ -61,8 +63,8 @@ public class UsuarioService {
         throw new ResponseStatusException(org.springframework.http.HttpStatus.NOT_FOUND, "Usuário não encontrado");
     }
 
-    public void cancelarPlanoUsuario(String usuarioId, String motivo) {
-        Optional<Usuario> usuarioOpt = usuarioRepository.findById(usuarioId);
+    public void cancelarPlanoUsuario(String email, String motivo) {
+        Optional<Usuario> usuarioOpt = usuarioRepository.findByEmail(email);
         if (usuarioOpt.isPresent()) {
             Usuario usuario = usuarioOpt.get();
             usuario.setPlanoAtivoStatus(false);
@@ -70,7 +72,7 @@ public class UsuarioService {
 
             // Registrar cancelamento no histórico
             HistoricoAlteracaoPlano historico = new HistoricoAlteracaoPlano();
-            historico.setUsuarioId(usuarioId);
+            historico.setUsuarioId(usuario.getId());
             historico.setPlanoAnterior(usuario.getPlanoAtivo().getNome());
             historico.setPlanoAtual("N/A");
             historico.setDataAlteracao(LocalDateTime.now());
