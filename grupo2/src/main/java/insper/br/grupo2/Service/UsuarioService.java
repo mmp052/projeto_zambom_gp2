@@ -7,6 +7,7 @@ import insper.br.grupo2.Repository.HistoricoAlteracaoPlanoRepository;
 import insper.br.grupo2.Repository.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDateTime;
 import java.util.Optional;
@@ -25,15 +26,21 @@ public class UsuarioService {
         if (usuarioOpt.isPresent()) {
             return usuarioOpt.get().getPlanoAtivo();
         }
-        throw new RuntimeException("Usuário não encontrado");
+        throw new ResponseStatusException(org.springframework.http.HttpStatus.NOT_FOUND, "Usuário não encontrado");
     }
 
     public HistoricoAlteracaoPlano getHistoricoUsuario(String email) {
         Optional<Usuario> usuarioOpt = usuarioRepository.findByEmail(email);
         if (usuarioOpt.isPresent()) {
-            return historicoRepository.findByUsuarioEmail(email);
+
+            HistoricoAlteracaoPlano historico =  historicoRepository.findByUsuarioEmail(email);
+            if (historico != null) {
+                return historico;
+            }
+            throw new ResponseStatusException(org.springframework.http.HttpStatus.NOT_FOUND, "Histórico não encontrado");
+
         }
-        throw new RuntimeException("Usuário não encontrado");
+        throw new ResponseStatusException(org.springframework.http.HttpStatus.NOT_FOUND, "Usuário não encontrado");
     }
 
     public Usuario associarPlanoAUsuario(String email, Plano novoPlano) {
@@ -44,19 +51,16 @@ public class UsuarioService {
             usuario.setPlanoAtivo(novoPlano);
             usuario.setPlanoAtivoStatus(true);
             usuarioRepository.save(usuario);
-
-            // Registrar no histórico
             HistoricoAlteracaoPlano historico = new HistoricoAlteracaoPlano();
             historico.setUsuarioId(usuario.getId());
             historico.setPlanoAnterior(planoAnterior != null ? planoAnterior.getNome() : "N/A");
             historico.setPlanoAtual(novoPlano.getNome());
             historico.setDataAlteracao(LocalDateTime.now());
             historico.setTipoAlteracao("ASSOCIACAO");
-
             historicoRepository.save(historico);
             return usuario;
         }
-        throw new RuntimeException("Usuário não encontrado");
+        throw new ResponseStatusException(org.springframework.http.HttpStatus.NOT_FOUND, "Usuário não encontrado");
     }
 
     public void cancelarPlanoUsuario(String email, String motivo) {
@@ -80,7 +84,7 @@ public class UsuarioService {
 
             historicoRepository.save(historico);
         } else {
-            throw new RuntimeException("Usuário não encontrado");
+            throw new ResponseStatusException(org.springframework.http.HttpStatus.NOT_FOUND, "Usuário não encontrado");
         }
     }
 }
