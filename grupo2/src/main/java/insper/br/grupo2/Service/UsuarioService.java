@@ -31,7 +31,11 @@ public class UsuarioService {
     public HistoricoAlteracaoPlano getHistoricoUsuario(String usuarioId) {
         Optional<Usuario> usuarioOpt = usuarioRepository.findById(usuarioId);
         if (usuarioOpt.isPresent()) {
-            return historicoRepository.findByUsuarioId(usuarioId);
+            HistoricoAlteracaoPlano historico =  historicoRepository.findByUsuarioId(usuarioId);
+            if (historico != null) {
+                return historico;
+            }
+            throw new RuntimeException("Histórico não encontrado");
         }
         throw new RuntimeException("Usuário não encontrado");
     }
@@ -44,15 +48,12 @@ public class UsuarioService {
             usuario.setPlanoAtivo(novoPlano);
             usuario.setPlanoAtivoStatus(true);
             usuarioRepository.save(usuario);
-
-            // Registrar no histórico
             HistoricoAlteracaoPlano historico = new HistoricoAlteracaoPlano();
             historico.setUsuarioId(usuarioId);
             historico.setPlanoAnterior(planoAnterior != null ? planoAnterior.getNome() : "N/A");
             historico.setPlanoAtual(novoPlano.getNome());
             historico.setDataAlteracao(LocalDateTime.now());
             historico.setTipoAlteracao("ASSOCIACAO");
-
             historicoRepository.save(historico);
             return usuario;
         }
