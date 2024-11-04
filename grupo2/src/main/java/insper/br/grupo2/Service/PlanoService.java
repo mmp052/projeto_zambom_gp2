@@ -6,8 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -17,30 +15,6 @@ public class PlanoService {
 
     @Autowired
     private PlanoRepository planoRepository;
-
-    // Lista de nomes de planos válidos
-    private static final List<String> NOMES_PLANOS_VALIDOS = Arrays.asList("Básico", "Padrão", "Premium");
-
-    // Map para preços esperados de cada plano
-    private static final Map<String, Double> PRECOS_PLANOS_ESPERADOS = new HashMap<>();
-    static {
-        PRECOS_PLANOS_ESPERADOS.put("Básico", 15.90);
-        PRECOS_PLANOS_ESPERADOS.put("Padrão", 29.90);
-        PRECOS_PLANOS_ESPERADOS.put("Premium", 45.90);
-    }
-
-    // Map para benefícios esperados de acordo com o nome do plano e dispositivos simultâneos
-    private static final Map<String, String> BENEFICIOS_ESPERADOS = new HashMap<>();
-    private static final Map<String, Integer> DISPOSITIVOS_ESPERADOS = new HashMap<>();
-    static {
-        BENEFICIOS_ESPERADOS.put("Básico", "Qualidade de imagem HD, 1 tela simultânea e anuncios");
-        BENEFICIOS_ESPERADOS.put("Padrão", "Qualidade de imagem Full HD, 2 telas simultâneas e sem anuncios");
-        BENEFICIOS_ESPERADOS.put("Premium", "Qualidade de imagem 4K, 4 telas simultâneas e sem anuncios");
-
-        DISPOSITIVOS_ESPERADOS.put("Básico", 1);
-        DISPOSITIVOS_ESPERADOS.put("Padrão", 2);
-        DISPOSITIVOS_ESPERADOS.put("Premium", 4);
-    }
 
 
 
