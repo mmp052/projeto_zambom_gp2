@@ -68,6 +68,7 @@ public class UsuarioService {
         if (historico == null) {
             historico = new HistoricoAlteracaoPlano();
             historico.setEmail(email);
+            historico.setHistoricoPlanos(new ArrayList<Plano>());
         }
         ArrayList<Plano> historicoPlanos = historico.getHistoricoPlanos();
         historicoPlanos.add(novoPlano);
