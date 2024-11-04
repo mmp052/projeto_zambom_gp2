@@ -47,6 +47,7 @@ public class UsuarioService {
     }
 
     public Usuario associarPlanoAUsuario(String email, String idPlano) {
+        System.out.println(idPlano);
         Optional<Usuario> usuarioOpt = usuarioRepository.findByEmail(email);
         if (usuarioOpt.isPresent()) {
             Plano novoPlano = planoRepository.findById(idPlano).orElseThrow(() -> new ResponseStatusException(org.springframework.http.HttpStatus.NOT_FOUND, "Plano não encontrado"));
