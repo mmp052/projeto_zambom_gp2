@@ -15,27 +15,27 @@ public class UsuarioController {
     @Autowired
     private UsuarioService usuarioService;
 
-    @GetMapping("/{usuarioId}")
-    public Plano getUsuario(@PathVariable String usuarioId, @RequestHeader("Authorization") String authorization){
+    @GetMapping()
+    public Plano getUsuario(@RequestHeader("Authorization") String authorization){
 
         String email = TokenUtils.getEmailFromToken(authorization);
         return usuarioService.getPlanoUsuario(email);
     }
 
-    @GetMapping("/{usuarioId}/historico")
-    public HistoricoAlteracaoPlano getHistorico(@PathVariable String usuarioId, @RequestHeader("Authorization") String authorization) {
+    @GetMapping("/historico")
+    public HistoricoAlteracaoPlano getHistorico(@RequestHeader("Authorization") String authorization) {
         String email = TokenUtils.getEmailFromToken(authorization);
         return usuarioService.getHistoricoUsuario(email);
     }
 
     @PostMapping("/associar-plano/{idPlano}")
-    public Usuario associarPlano(@RequestParam String idPlano, @RequestHeader("Authorization") String authorization){
+    public Usuario associarPlano(@PathVariable String idPlano, @RequestHeader("Authorization") String authorization){
         String email = TokenUtils.getEmailFromToken(authorization);
         return usuarioService.associarPlanoAUsuario(email, idPlano);
     }
 
-    @PostMapping("/{usuarioId}/cancelar-plano")
-    public void cancelarPlano(@PathVariable String usuarioId, @RequestParam String motivo, @RequestHeader("Authorization") String authorization){
+    @PostMapping("/cancelar-plano")
+    public void cancelarPlano(@RequestParam String motivo, @RequestHeader("Authorization") String authorization){
         String email = TokenUtils.getEmailFromToken(authorization);
 
         usuarioService.cancelarPlanoUsuario(email, motivo);
