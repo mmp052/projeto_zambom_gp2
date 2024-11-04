@@ -57,7 +57,18 @@ public class UsuarioService {
             historico.setPlanoAnterior(planoAnterior != null ? planoAnterior.getNome() : "N/A");
             historico.setPlanoAtual(novoPlano.getNome());
             historico.setDataAlteracao(LocalDateTime.now());
-            historico.setTipoAlteracao("ASSOCIACAO");
+
+            assert planoAnterior != null;
+            if (planoAnterior.getNome().equals("N/A")) {
+                historico.setTipoAlteracao("ASSOCIAÇÃO");
+            }
+            else if (planoAnterior.getPreco() > novoPlano.getPreco()) {
+                historico.setTipoAlteracao("DOWNGRADE");
+            } else if (planoAnterior.getPreco() < novoPlano.getPreco()) {
+                historico.setTipoAlteracao("UPGRADE");
+            } else {
+                historico.setTipoAlteracao("ASSOCIAÇÃO");
+            }
 
             historicoRepository.save(historico);
             return usuario;
