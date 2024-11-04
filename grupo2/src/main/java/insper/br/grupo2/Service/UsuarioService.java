@@ -63,7 +63,11 @@ public class UsuarioService {
         usuario.setPlanoAtivoStatus(true);
         usuarioRepository.save(usuario);
 
-        HistoricoAlteracaoPlano historico = new HistoricoAlteracaoPlano();
+        HistoricoAlteracaoPlano historico = historicoRepository.findByEmail(email);
+        if (historico == null) {
+            historico = new HistoricoAlteracaoPlano();
+            historico.setEmail(email);
+        }
         historico.setEmail(usuario.getEmail());
         historico.setPlanoAnterior(planoAnterior != null ? planoAnterior.getNome() : "N/A");
         historico.setPlanoAtual(novoPlano.getNome());
