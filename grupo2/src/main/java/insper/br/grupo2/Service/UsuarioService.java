@@ -48,37 +48,43 @@ public class UsuarioService {
 
     public Usuario associarPlanoAUsuario(String email, String idPlano) {
         System.out.println(idPlano);
+        Usuario usuario;
         Optional<Usuario> usuarioOpt = usuarioRepository.findByEmail(email);
-        if (usuarioOpt.isPresent()) {
-            Plano novoPlano = planoRepository.findById(idPlano).orElseThrow(() -> new ResponseStatusException(org.springframework.http.HttpStatus.NOT_FOUND, "Plano não encontrado"));
-            Usuario usuario = usuarioOpt.get();
-            Plano planoAnterior = usuario.getPlanoAtivo();
-            usuario.setPlanoAtivo(novoPlano);
-            usuario.setPlanoAtivoStatus(true);
-            usuarioRepository.save(usuario);
-
-            HistoricoAlteracaoPlano historico = new HistoricoAlteracaoPlano();
-            historico.setEmail(usuario.getEmail());
-            historico.setPlanoAnterior(planoAnterior != null ? planoAnterior.getNome() : "N/A");
-            historico.setPlanoAtual(novoPlano.getNome());
-            historico.setDataAlteracao(LocalDateTime.now());
-
-            assert planoAnterior != null;
-            if (planoAnterior.getNome().equals("N/A")) {
-                historico.setTipoAlteracao("ASSOCIAÇÃO");
-            }
-            else if (planoAnterior.getPreco() > novoPlano.getPreco()) {
-                historico.setTipoAlteracao("DOWNGRADE");
-            } else if (planoAnterior.getPreco() < novoPlano.getPreco()) {
-                historico.setTipoAlteracao("UPGRADE");
-            } else {
-                historico.setTipoAlteracao("ASSOCIAÇÃO");
-            }
-
-            historicoRepository.save(historico);
-            return usuario;
+        if (!usuarioOpt.isPresent()) {
+            usuario = new Usuario();
+            usuario.setEmail(email);
         }
-        throw new ResponseStatusException(org.springframework.http.HttpStatus.NOT_FOUND, "Usuário não encontrado");
+        else{
+            usuario = usuarioOpt.get();
+        }
+        Plano novoPlano = planoRepository.findById(idPlano).orElseThrow(() -> new ResponseStatusException(org.springframework.http.HttpStatus.NOT_FOUND, "Plano não encontrado"));
+        Plano planoAnterior = usuario.getPlanoAtivo();
+        usuario.setPlanoAtivo(novoPlano);
+        usuario.setPlanoAtivoStatus(true);
+        usuarioRepository.save(usuario);
+
+        HistoricoAlteracaoPlano historico = new HistoricoAlteracaoPlano();
+        historico.setEmail(usuario.getEmail());
+        historico.setPlanoAnterior(planoAnterior != null ? planoAnterior.getNome() : "N/A");
+        historico.setPlanoAtual(novoPlano.getNome());
+        historico.setDataAlteracao(LocalDateTime.now());
+
+        assert planoAnterior != null;
+        if (planoAnterior.getNome().equals("N/A")) {
+            historico.setTipoAlteracao("ASSOCIAÇÃO");
+        }
+        else if (planoAnterior.getPreco() > novoPlano.getPreco()) {
+            historico.setTipoAlteracao("DOWNGRADE");
+        } else if (planoAnterior.getPreco() < novoPlano.getPreco()) {
+            historico.setTipoAlteracao("UPGRADE");
+        } else {
+            historico.setTipoAlteracao("ASSOCIAÇÃO");
+        }
+
+        historicoRepository.save(historico);
+        return usuario;
+
+
     }
 
     public void cancelarPlanoUsuario(String email, String motivo) {
