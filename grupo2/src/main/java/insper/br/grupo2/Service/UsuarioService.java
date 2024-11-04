@@ -79,8 +79,10 @@ public class UsuarioService {
 
         
         historico.setTipoAlteracao(planoAnterior != null ? planoAnterior.getNome(): "ASSOCIAÇÃO");
-        
-        if (planoAnterior.getPreco() > novoPlano.getPreco()) {
+        if (planoAnterior == null){
+            System.out.println(1);
+        }
+        else if (planoAnterior.getPreco() > novoPlano.getPreco()) {
             historico.setTipoAlteracao("DOWNGRADE");
         } else if (planoAnterior.getPreco() < novoPlano.getPreco()) {
             historico.setTipoAlteracao("UPGRADE");
