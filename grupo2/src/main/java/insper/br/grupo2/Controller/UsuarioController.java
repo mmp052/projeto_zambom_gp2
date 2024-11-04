@@ -28,10 +28,10 @@ public class UsuarioController {
         return usuarioService.getHistoricoUsuario(email);
     }
 
-    @PostMapping("/{usuarioId}/associar-plano")
-    public Usuario associarPlano(@PathVariable String usuarioId, @RequestBody String id, @RequestHeader("Authorization") String authorization){
+    @PostMapping("/associar-plano/{idPlano}")
+    public Usuario associarPlano(@RequestParam String idPlano, @RequestHeader("Authorization") String authorization){
         String email = TokenUtils.getEmailFromToken(authorization);
-        return usuarioService.associarPlanoAUsuario(email, id);
+        return usuarioService.associarPlanoAUsuario(email, idPlano);
     }
 
     @PostMapping("/{usuarioId}/cancelar-plano")
