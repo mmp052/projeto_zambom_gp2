@@ -3,10 +3,10 @@ package insper.br.grupo2.Controller;
 import insper.br.grupo2.Classes.Plano;
 import insper.br.grupo2.Classes.HistoricoAlteracaoPlano;
 import insper.br.grupo2.Classes.Usuario;
+import insper.br.grupo2.Common.TokenUtils;
 import insper.br.grupo2.Service.UsuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import br.insper.loja.common.TokenUtils;
 
 @RestController
 @RequestMapping("/api/usuarios")

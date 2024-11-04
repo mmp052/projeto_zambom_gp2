@@ -1,4 +1,4 @@
-package br.insper.loja.common;
+package insper.br.grupo2.Common;
 
 import com.nimbusds.jwt.JWT;
 import com.nimbusds.jwt.JWTParser;
