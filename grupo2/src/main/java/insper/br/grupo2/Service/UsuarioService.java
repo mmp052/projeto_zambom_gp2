@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Optional;
 
 @Service
@@ -68,6 +69,9 @@ public class UsuarioService {
             historico = new HistoricoAlteracaoPlano();
             historico.setEmail(email);
         }
+        ArrayList<Plano> historicoPlanos = historico.getHistoricoPlanos();
+        historicoPlanos.add(novoPlano);
+        historico.setHistoricoPlanos(historicoPlanos);
         historico.setEmail(usuario.getEmail());
         historico.setPlanoAnterior(planoAnterior != null ? planoAnterior.getNome() : "N/A");
         historico.setPlanoAtual(novoPlano.getNome());

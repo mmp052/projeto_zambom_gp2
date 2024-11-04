@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 
 @Getter
 @Setter
@@ -18,6 +19,7 @@ public class HistoricoAlteracaoPlano {
     private String email;
     private String planoAnterior; // Ex.: "Básico", "Padrão", "Premium"
     private String planoAtual; // Ex.: "Básico", "Padrão", "Premium"
+    private ArrayList<Plano> historicoPlanos;
     private LocalDateTime dataAlteracao;
     private String tipoAlteracao; // Ex.: "UPGRADE", "DOWNGRADE", "CANCELAMENTO"
     private String motivoCancelamento; // Ex.: "Mudança de plano", "Insatisfação com o serviço", "Problemas financeiros"
