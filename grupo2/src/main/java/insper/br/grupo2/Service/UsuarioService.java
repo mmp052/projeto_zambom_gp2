@@ -104,14 +104,11 @@ public class UsuarioService {
             usuario.setPlanoAtivoStatus(false);
             usuarioRepository.save(usuario);
 
-            // Registrar cancelamento no histórico
-            HistoricoAlteracaoPlano historico = new HistoricoAlteracaoPlano();
-            historico.setEmail(usuario.getEmail());
-            historico.setPlanoAnterior(usuario.getPlanoAtivo().getNome());
+            HistoricoAlteracaoPlano historico = historicoRepository.findByEmail(email);
             historico.setPlanoAtual("N/A");
             historico.setDataAlteracao(LocalDateTime.now());
             historico.setTipoAlteracao("CANCELAMENTO");
-            if(motivo == null) {
+            if (motivo == null) {
                 motivo = "Motivo não informado";
             }
             historico.setMotivoCancelamento(motivo);

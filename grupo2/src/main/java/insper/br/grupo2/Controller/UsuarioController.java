@@ -35,7 +35,7 @@ public class UsuarioController {
     }
 
     @PostMapping("/cancelar-plano")
-    public void cancelarPlano(@RequestParam String motivo, @RequestHeader("Authorization") String authorization){
+    public void cancelarPlano(@RequestBody String motivo, @RequestHeader("Authorization") String authorization){
         String email = TokenUtils.getEmailFromToken(authorization);
 
         usuarioService.cancelarPlanoUsuario(email, motivo);
