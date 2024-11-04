@@ -69,15 +69,47 @@ public class PlanoService {
         throw new ResponseStatusException(org.springframework.http.HttpStatus.NOT_FOUND, "Plano não encontrado");
     }
 
-    public Plano atualizarPlano(String id, Plano planoAtualizado) {
-        if (!(planoAtualizado.getNome() != null && !planoAtualizado.getNome().isEmpty()
-                && planoAtualizado.getPreco() > 0
-                && planoAtualizado.getBeneficios() != null && !planoAtualizado.getBeneficios().isEmpty()
-                && planoAtualizado.getDispositivosSimultaneos() > 0)){
-            throw new ResponseStatusException(org.springframework.http.HttpStatus.BAD_REQUEST, "Dados do plano inválidos");
+    public Plano atualizarPlano(String id, Map<String, Object> alteracoes) {
+        Optional<Plano> planoOpt = planoRepository.findById(id);
+        if (!planoOpt.isPresent()) {
+            throw new ResponseStatusException(org.springframework.http.HttpStatus.NOT_FOUND, "Plano não encontrado para atualização");
         }
-        planoAtualizado.setId(id);
-        return planoRepository.save(planoAtualizado);
+        for (String key : alteracoes.keySet()) {
+            switch (key) {
+                case "nome":
+                    String nome = (String) alteracoes.get(key);
+                    if (nome == null || nome.isEmpty()){
+                        throw new ResponseStatusException(org.springframework.http.HttpStatus.BAD_REQUEST, "Nome de plano inválido");
+                    }
+                    planoOpt.get().setNome(nome);
+
+                case "preco":
+                    double preco = (double) alteracoes.get(key);
+                    if (preco <= 0) {
+                        throw new ResponseStatusException(org.springframework.http.HttpStatus.BAD_REQUEST, "Preço de plano inválido");
+                    }
+                    planoOpt.get().setPreco(preco);
+
+                case "beneficios":
+                    String beneficios = (String) alteracoes.get(key);
+                    if (beneficios == null || beneficios.isEmpty()){
+                        throw new ResponseStatusException(org.springframework.http.HttpStatus.BAD_REQUEST, "Benefícios de plano inválidos");
+                    }
+                    planoOpt.get().setBeneficios(beneficios);
+
+                case "dispositivosSimultaneos":
+                    int dispositivosSimultaneos = (int) alteracoes.get(key);
+                    if (dispositivosSimultaneos <= 0) {
+                        throw new ResponseStatusException(org.springframework.http.HttpStatus.BAD_REQUEST, "Número de dispositivos simultâneos inválido");
+                    }
+                    planoOpt.get().setDispositivosSimultaneos(dispositivosSimultaneos);
+
+                default:
+                    throw new ResponseStatusException(org.springframework.http.HttpStatus.BAD_REQUEST, "Campo inválido para atualização");
+            }
+        }
+        planoOpt.get().setId(id);
+        return planoRepository.save(planoOpt.get());
     }
 
     public void deletarPlano(String id) {

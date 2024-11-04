@@ -32,8 +32,7 @@ public class UsuarioService {
     public HistoricoAlteracaoPlano getHistoricoUsuario(String email) {
         Optional<Usuario> usuarioOpt = usuarioRepository.findByEmail(email);
         if (usuarioOpt.isPresent()) {
-
-            HistoricoAlteracaoPlano historico =  historicoRepository.findByUsuarioEmail(email);
+            HistoricoAlteracaoPlano historico =  historicoRepository.findByEmail(email);
             if (historico != null) {
                 return historico;
             }
@@ -46,17 +45,20 @@ public class UsuarioService {
     public Usuario associarPlanoAUsuario(String email, Plano novoPlano) {
         Optional<Usuario> usuarioOpt = usuarioRepository.findByEmail(email);
         if (usuarioOpt.isPresent()) {
+
             Usuario usuario = usuarioOpt.get();
             Plano planoAnterior = usuario.getPlanoAtivo();
             usuario.setPlanoAtivo(novoPlano);
             usuario.setPlanoAtivoStatus(true);
             usuarioRepository.save(usuario);
+
             HistoricoAlteracaoPlano historico = new HistoricoAlteracaoPlano();
-            historico.setUsuarioId(usuario.getId());
+            historico.setEmail(usuario.getEmail());
             historico.setPlanoAnterior(planoAnterior != null ? planoAnterior.getNome() : "N/A");
             historico.setPlanoAtual(novoPlano.getNome());
             historico.setDataAlteracao(LocalDateTime.now());
             historico.setTipoAlteracao("ASSOCIACAO");
+
             historicoRepository.save(historico);
             return usuario;
         }
@@ -72,7 +74,7 @@ public class UsuarioService {
 
             // Registrar cancelamento no histórico
             HistoricoAlteracaoPlano historico = new HistoricoAlteracaoPlano();
-            historico.setUsuarioId(usuario.getId());
+            historico.setEmail(usuario.getEmail());
             historico.setPlanoAnterior(usuario.getPlanoAtivo().getNome());
             historico.setPlanoAtual("N/A");
             historico.setDataAlteracao(LocalDateTime.now());

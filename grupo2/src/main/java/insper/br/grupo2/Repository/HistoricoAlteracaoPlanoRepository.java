@@ -5,5 +5,5 @@ import org.springframework.data.mongodb.repository.MongoRepository;
 
 public interface HistoricoAlteracaoPlanoRepository extends MongoRepository<HistoricoAlteracaoPlano, String> {
     HistoricoAlteracaoPlano findByUsuarioId(String usuarioId);
-    HistoricoAlteracaoPlano findByUsuarioEmail(String email);
+    HistoricoAlteracaoPlano findByEmail(String email);
 }

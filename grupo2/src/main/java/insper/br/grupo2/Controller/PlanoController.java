@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/planos")
@@ -30,8 +31,8 @@ public class PlanoController {
     }
 
     @PutMapping("/{id}")
-    public Plano atualizarPlano(@PathVariable String id, @RequestBody Plano plano) {
-        return planoService.atualizarPlano(id, plano);
+    public Plano atualizarPlano(@PathVariable String id, @RequestBody Map<String, Object> alteracoes) {
+        return planoService.atualizarPlano(id, alteracoes);
     }
 
     @DeleteMapping("/{id}")
