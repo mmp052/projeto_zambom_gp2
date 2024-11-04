@@ -73,9 +73,8 @@ public class UsuarioService {
         historico.setPlanoAtual(novoPlano.getNome());
         historico.setDataAlteracao(LocalDateTime.now());
 
-        assert planoAnterior != null;
         if (planoAnterior.getNome().equals("N/A")) {
-            historico.setTipoAlteracao("ASSOCIAÇÃO");
+            historico.setTipoAlteracao(planoAnterior != null ? planoAnterior.getNome(): "ASSOCIAÇÃO");
         }
         else if (planoAnterior.getPreco() > novoPlano.getPreco()) {
             historico.setTipoAlteracao("DOWNGRADE");
