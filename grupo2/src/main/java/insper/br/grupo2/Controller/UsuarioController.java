@@ -29,9 +29,9 @@ public class UsuarioController {
     }
 
     @PostMapping("/{usuarioId}/associar-plano")
-    public Usuario associarPlano(@PathVariable String usuarioId, @RequestBody Plano novoPlano, @RequestHeader("Authorization") String authorization){
+    public Usuario associarPlano(@PathVariable String usuarioId, @RequestBody String id, @RequestHeader("Authorization") String authorization){
         String email = TokenUtils.getEmailFromToken(authorization);
-        return usuarioService.associarPlanoAUsuario(email, novoPlano);
+        return usuarioService.associarPlanoAUsuario(email, id);
     }
 
     @PostMapping("/{usuarioId}/cancelar-plano")

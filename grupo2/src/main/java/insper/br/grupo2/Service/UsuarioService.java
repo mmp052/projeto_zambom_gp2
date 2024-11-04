@@ -4,6 +4,7 @@ import insper.br.grupo2.Classes.HistoricoAlteracaoPlano;
 import insper.br.grupo2.Classes.Plano;
 import insper.br.grupo2.Classes.Usuario;
 import insper.br.grupo2.Repository.HistoricoAlteracaoPlanoRepository;
+import insper.br.grupo2.Repository.PlanoRepository;
 import insper.br.grupo2.Repository.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,6 +18,9 @@ public class UsuarioService {
 
     @Autowired
     private UsuarioRepository usuarioRepository;
+
+    @Autowired
+    private PlanoRepository planoRepository;
 
     @Autowired
     private HistoricoAlteracaoPlanoRepository historicoRepository;
@@ -42,10 +46,10 @@ public class UsuarioService {
         throw new ResponseStatusException(org.springframework.http.HttpStatus.NOT_FOUND, "Usuário não encontrado");
     }
 
-    public Usuario associarPlanoAUsuario(String email, Plano novoPlano) {
+    public Usuario associarPlanoAUsuario(String email, String idPlano) {
         Optional<Usuario> usuarioOpt = usuarioRepository.findByEmail(email);
         if (usuarioOpt.isPresent()) {
-
+            Plano novoPlano = planoRepository.findById(idPlano).orElseThrow(() -> new ResponseStatusException(org.springframework.http.HttpStatus.NOT_FOUND, "Plano não encontrado"));
             Usuario usuario = usuarioOpt.get();
             Plano planoAnterior = usuario.getPlanoAtivo();
             usuario.setPlanoAtivo(novoPlano);
