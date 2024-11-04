@@ -56,28 +56,28 @@ public class PlanoService {
                         throw new ResponseStatusException(org.springframework.http.HttpStatus.BAD_REQUEST, "Nome de plano inválido");
                     }
                     planoOpt.get().setNome(nome);
-
+                    break;
                 case "preco":
                     double preco = (double) alteracoes.get(key);
                     if (preco <= 0) {
                         throw new ResponseStatusException(org.springframework.http.HttpStatus.BAD_REQUEST, "Preço de plano inválido");
                     }
                     planoOpt.get().setPreco(preco);
-
+                    break;
                 case "beneficios":
                     String beneficios = (String) alteracoes.get(key);
                     if (beneficios == null || beneficios.isEmpty()){
                         throw new ResponseStatusException(org.springframework.http.HttpStatus.BAD_REQUEST, "Benefícios de plano inválidos");
                     }
                     planoOpt.get().setBeneficios(beneficios);
-
+                    break;
                 case "dispositivosSimultaneos":
                     int dispositivosSimultaneos = (int) alteracoes.get(key);
                     if (dispositivosSimultaneos <= 0) {
                         throw new ResponseStatusException(org.springframework.http.HttpStatus.BAD_REQUEST, "Número de dispositivos simultâneos inválido");
                     }
                     planoOpt.get().setDispositivosSimultaneos(dispositivosSimultaneos);
-
+                    break;
                 default:
                     throw new ResponseStatusException(org.springframework.http.HttpStatus.BAD_REQUEST, "Campo inválido para atualização");
             }
