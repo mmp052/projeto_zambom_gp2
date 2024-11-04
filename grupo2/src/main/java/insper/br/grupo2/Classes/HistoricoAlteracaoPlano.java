@@ -16,11 +16,11 @@ public class HistoricoAlteracaoPlano {
     private String id;
 
     private String usuarioId;
-    private String planoAnterior;
-    private String planoAtual;
+    private String planoAnterior; // Ex.: "Básico", "Padrão", "Premium"
+    private String planoAtual; // Ex.: "Básico", "Padrão", "Premium"
     private LocalDateTime dataAlteracao;
     private String tipoAlteracao; // Ex.: "UPGRADE", "DOWNGRADE", "CANCELAMENTO"
-    private String motivoCancelamento;
+    private String motivoCancelamento; // Ex.: "Mudança de plano", "Insatisfação com o serviço", "Problemas financeiros"
 
     public String getId() {
         return id;
