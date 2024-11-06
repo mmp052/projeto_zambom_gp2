@@ -15,5 +15,12 @@ public class Usuario {
     private Plano planoAtivo;
     private boolean planoAtivoStatus;
 
+    public boolean getPlanoAtivoStatus() {
+        return planoAtivoStatus;
+    }
+    public void setPlanoAtivoStatus(boolean planoAtivoStatus) {
+        this.planoAtivoStatus = planoAtivoStatus;
+    }
+
 
 }

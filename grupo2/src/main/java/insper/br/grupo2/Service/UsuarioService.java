@@ -29,7 +29,11 @@ public class UsuarioService {
     public Plano getPlanoUsuario(String email) {
         Optional<Usuario> usuarioOpt = usuarioRepository.findByEmail(email);
         if (usuarioOpt.isPresent()) {
-            return usuarioOpt.get().getPlanoAtivo();
+            Plano plano = new Plano();
+            plano.setNome("N/A");
+            plano.setPreco(0);
+
+            return usuarioOpt.get().getPlanoAtivoStatus()  ?  usuarioOpt.get().getPlanoAtivo() : plano;
         }
         throw new ResponseStatusException(org.springframework.http.HttpStatus.NOT_FOUND, "Usuário não encontrado");
     }
